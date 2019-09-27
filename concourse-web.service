@@ -1,0 +1,11 @@
+[Unit]
+Description=Concourse CI web process (ATC and TSA)
+After=postgresql.service
+
+[Service]
+User=concourse
+Restart=on-failure
+EnvironmentFile=/etc/concourse/web_environment
+ExecStart=/usr/local/bin/concourse web         --log-level debug         --session-signing-key /etc/concourse/session_signing_key         --tsa-host-key /etc/concourse/tsa_host_key         --tsa-authorized-keys /etc/concourse/authorized_worker_keys         --postgres-host localhost         --postgres-user concourse         --postgres-password concourse         --postgres-database atc         --add-local-user admin:admin         --main-team-local-user admin         --external-url http://3.15.211.22:8080
+[Install]
+WantedBy=multi-user.target
