@@ -1,8 +1,8 @@
 #Prepare the system
-sudo apt-get update && sudo apt-get upgrade
+sudo apt-get update && sudo apt-get -y upgrade
 
 #Install Postgresql and create the User with the DB
-sudo apt-get install postgresql postgresql-contrib
+sudo apt-get install -y postgresql postgresql-contrib
 sudo -u postgres bash -c "psql -c \"CREATE USER concourse WITH PASSWORD 'concourse';\""
 sudo -u postgres createdb --owner=concourse atc
 
@@ -13,7 +13,7 @@ curl -LO https://github.com/concourse/concourse/releases/download/v5.5.1/concour
 curl -LO https://github.com/concourse/concourse/releases/download/v5.5.1/fly-5.5.1-linux-amd64.tgz
 tar zxvf concourse*.tgz
 tar zxvf fly*.tgz
-chmod +x concourse* fly*
+chmod +x concourse/bin/* fly*
 sudo mv concourse/bin/* /usr/local/bin
 sudo mv fly* /usr/local/bin
 
@@ -27,8 +27,9 @@ sudo cp /etc/concourse/worker_key.pub /etc/concourse/authorized_worker_keys
 
 
 #Creating the Environment Configuration Files
-sudo cp web_environment /etc/concourse/web_environment
-sudo cp worker_environment /etc/concourse/worker_environment
+cd -
+sudo cp web_environment /etc/concourse
+sudo cp worker_environment /etc/concourse
 
 
 #Creating a Dedicated System User and Adjusting Permissions
@@ -38,8 +39,8 @@ sudo chmod 600 /etc/concourse/*_environment
 
 
 #Create Systemd Unit Files for the Web and Worker Processes
-sudo cp concourse-web.service /etc/systemd/system/concourse-web.service
-sudo cp concourse-worker.service /etc/systemd/system/concourse-worker.service
+sudo cp concourse-web.service /etc/systemd/system
+sudo cp concourse-worker.service /etc/systemd/system
 
 
 sudo systemctl start concourse-web concourse-worker
